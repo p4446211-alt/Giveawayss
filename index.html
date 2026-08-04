@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giveaways — AKR | Treasure Hunter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #07070f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 40%, #1a1040 0%, #07070f 70%);
+            z-index: 0;
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb1 { width: 500px; height: 500px; top: -150px; right: -150px; background: rgba(255, 215, 0, 0.08); }
+        .orb2 { width: 400px; height: 400px; bottom: -100px; left: -100px; background: rgba(255, 100, 50, 0.06); }
+        .orb3 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 215, 0, 0.04); }
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 640px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 48px;
+            padding: 48px 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            text-align: center;
+            animation: fadeUp 0.8s ease-out;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 20px;
+            border-radius: 100px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            animation: pulse 3s infinite;
+        }
+        .logo {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #f7971e, #ff6a00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 32px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+        .prize-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 28px 20px;
+            border: 1px solid rgba(255,255,255,0.04);
+            margin-bottom: 32px;
+            transition: 0.3s;
+        }
+        .prize-box:hover {
+            border-color: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.03);
+        }
+        .prize-box .icon { font-size: 52px; margin-bottom: 8px; display: block; }
+        .prize-box .name { font-size: 26px; font-weight: 700; color: #ffd700; letter-spacing: -0.5px; }
+        .prize-box .desc { font-size: 14px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+        .timer {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.04);
+            margin-bottom: 28px;
+        }
+        .timer-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.25); }
+        .timer-digits {
+            font-size: 46px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffd700, #f7971e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-variant-numeric: tabular-nums;
+            margin-top: 4px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 18px 52px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #0a0a12;
+            background: linear-gradient(135deg, #ffd700, #f7971e);
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
+            opacity: 0;
+            transition: 0.5s;
+            pointer-events: none;
+        }
+        .btn:hover {
+            transform: scale(1.04) translateY(-2px);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.35);
+        }
+        .btn:hover::after { opacity: 1; }
+        .rules {
+            margin-top: 28px;
+            text-align: left;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 20px 24px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .rules-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .rules li { list-style: none; font-size: 14px; color: rgba(255,255,255,0.55); padding: 6px 0; display: flex; align-items: center; gap: 10px; }
+        .rules li::before { content: "✦"; color: #ffd700; font-size: 12px; opacity: 0.5; }
+        .footer { margin-top: 32px; font-size: 12px; color: rgba(255,255,255,0.08); letter-spacing: 1px; }
+        .date { color: rgba(255,255,255,0.25); font-size: 14px; margin-top: 6px; }
+        @media (max-width: 480px) {
+            .container { padding: 32px 20px; border-radius: 32px; }
+            .logo { font-size: 38px; }
+            .timer-digits { font-size: 32px; letter-spacing: 4px; }
+            .prize-box .name { font-size: 20px; }
+            .btn { padding: 16px 36px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="container">
+        <div class="badge">🔥 Эксклюзивный розыгрыш</div>
+        <div class="logo">✦ Giveaways</div>
+        <div class="subtitle">Участвуй и выигрывай редкие предметы</div>
+
+        <div class="prize-box">
+            <span class="icon">🔫</span>
+            <div class="name">AKR | Treasure Hunter</div>
+            <div class="desc">Уникальный скин для Standoff 2</div>
+        </div>
+
+        <div class="timer">
+            <div class="timer-label">До окончания розыгрыша</div>
+            <div class="timer-digits" id="timer">00:00:00</div>
+            <div class="date">🎯 Розыгрыш состоится 10 августа</div>
+        </div>
+
+        <a href="google.html" class="btn">🚀 Участвовать</a>
+
+        <div class="rules">
+            <div class="rules-title">Условия участия</div>
+            <li>Подпишись на канал Giveaways</li>
+            <li>Зарегистрируйся через Google</li>
+            <li>Подтверди аккаунт</li>
+        </div>
+
+        <div class="footer">giveaways.com</div>
+    </div>
+
+    <script>
+        const target = new Date('2026-08-10T23:59:59').getTime();
+        const el = document.getElementById('timer');
+
+        function updateTimer() {
+            const now = Date.now();
+            let diff = Math.max(0, target - now);
+            const d = Math.floor(diff / 86400000);
+            diff -= d * 86400000;
+            const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+            diff -= h * 3600000;
+            const m = String(Math.floor(diff / 60000)).padStart(2, '0');
+            diff -= m * 60000;
+            const s = String(Math.floor(diff / 1000)).padStart(2, '0');
+            el.textContent = `${d}д ${h}:${m}:${s}`;
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
